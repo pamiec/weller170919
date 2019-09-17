@@ -103,9 +103,9 @@ function fahrzeugsuche()
 	      $partsChanged["modell"] = (mysql_escape_string($_REQUEST["modell"]) ? mysql_escape_string($_REQUEST["modell"]) : "");
 	    if((array_key_exists("neuwagen", $_REQUEST) && $_REQUEST["neuwagen"] == 1) && (array_key_exists("gebrauchtwagen", $_REQUEST) && $_REQUEST["gebrauchtwagen"] == 1)){
 	      $partsChanged["neufahrzeug"] = "2";
-	    }elseif((array_key_exists("neuwagen", $_REQUEST) && $_REQUEST["neuwagen"] == 1) || (array_key_exists("neufahrzeug", $_REQUEST) && mysql_escape_string($_REQUEST["neufahrzeug"]) == "1") || $this->getValue("article_id") == 11){
+	    }elseif((array_key_exists("neuwagen", $_REQUEST) && $_REQUEST["neuwagen"] == 1) || (array_key_exists("neufahrzeug", $_REQUEST) && mysql_escape_string($_REQUEST["neufahrzeug"]) == "1") || $_REQUEST["article_id"] == 11){ //#pm $this->getValue("article_id") -> $_REQUEST["article_id"]
 	      $partsChanged["neufahrzeug"] = "1";
-	    }elseif((array_key_exists("gebrauchtwagen", $_REQUEST) && $_REQUEST["gebrauchtwagen"] == 1) || (array_key_exists("neufahrzeug", $_REQUEST) && mysql_escape_string($_REQUEST["neufahrzeug"]) == "3") || $this->getValue("article_id") == 19){
+	    }elseif((array_key_exists("gebrauchtwagen", $_REQUEST) && $_REQUEST["gebrauchtwagen"] == 1) || (array_key_exists("neufahrzeug", $_REQUEST) && mysql_escape_string($_REQUEST["neufahrzeug"]) == "3") || $_REQUEST["article_id"] == 19){ //#pm $this->getValue("article_id") -> $_REQUEST["article_id"]
 	      $partsChanged["neufahrzeug"] = "3";
 	    }else{
 	      $partsChanged["neufahrzeug"] = "2";
@@ -141,15 +141,15 @@ function fahrzeugsuche()
 	    else
 	      $whereRaw = getWhereRaw("");
 	    $where = getWhere($whereRaw, "");
-	  }elseif($this->getValue("article_id") == 11 || $this->getValue("article_id") == 19){
-	    if($this->getValue("article_id") == 11)
+	  }elseif($_REQUEST["article_id"] == 11 || $_REQUEST["article_id"] == 19){ //#pm $this->getValue("article_id") -> $_REQUEST["article_id"]
+	    if($_REQUEST["article_id"] == 11)
 	      $neufahrzeug = 1;
 	    else
 	      $neufahrzeug = 3;
 	    $changed = "neufahrzeug_".$neufahrzeug.",".$_POST["changed"];
 	    $whereRaw = getWhereRaw($changed);
 	    $where = getWhere($whereRaw, "");
-	  }elseif ($this->getValue("article_id") == 27) {
+	  }elseif ($_REQUEST["article_id"] == 27) { //#pm $this->getValue("article_id") -> $_REQUEST["article_id"]
 	    $changed = "prekategorie_('Transporter'),".$_POST["changed"];
 	    $whereRaw = getWhereRaw($changed);
 	    $where = getWhere($whereRaw, "");
@@ -157,7 +157,8 @@ function fahrzeugsuche()
 	  if(array_key_exists("car_id", $_GET) && $_GET["car_id"]){
 	    $directOffer = "style='display:none;'";
 	  }
-	  if(!$_POST && (!array_key_exists("car_id", $_GET) || !$_GET["car_id"]) && (!array_key_exists("action", $_GET) || $_GET["action"] != "prefill") && ($this->getValue("article_id") != 1 && $this->getValue("article_id") != 11 && $this->getValue("article_id") != 19 && $this->getValue("article_id") != 27)){
+	  if(!$_POST && (!array_key_exists("car_id", $_GET) || !$_GET["car_id"]) && (!array_key_exists("action", $_GET) || $_GET["action"] != "prefill") && ($_REQUEST["article_id"] != 1 && $_REQUEST["article_id"] != 11 && $_REQUEST["article_id"] != 19 && $_REQUEST["article_id"] != 27)){
+	  	//#pm $this->getValue("article_id") -> $_REQUEST["article_id"]
 	    $where = "";
 	  }
 	  $amount = 20;
@@ -172,7 +173,7 @@ function fahrzeugsuche()
 */
 
 	  $i = 1;
-#	  if ($this->getValue("article_id") != 1){
+	  if ($_REQUEST["article_id"] != 1){ //#pm $this->getValue("article_id") -> $_REQUEST["article_id"]
 	    echo '<div class="fs-controller-box col-md-9">';
 	      echo '<ul id="fs-pager-top" class="pagination notopmargin toppager fs-pager" '.(isset($directOffer) ? $directOffer : '').'>';
 	        echo '<li class="'.($page == 0 ? "disabled" : "").' page-before"><a class="" href="#" rel="nofollow">«</a></li>';
@@ -237,13 +238,13 @@ function fahrzeugsuche()
 #	  }
 
 	  // Headline
-#	  if ($this->getValue("article_id") != 1){
+#	  if ($_REQUEST["article_id"] != 1){ //#pm $this->getValue("article_id") -> $_REQUEST["article_id"]
 	  echo '<h1>Fahrzeugsuche</h1>';
 #	  }
 
 	  // Selektor
 
-#	  if($this->getValue("article_id") != 1){
+#	  if($_REQUEST["article_id"] != 1){ //#pm $this->getValue("article_id") -> $_REQUEST["article_id"]
 	    echo "<div class='row'>";
 	      echo "<div class='col-md-3'>";
 #	  }
@@ -252,20 +253,21 @@ function fahrzeugsuche()
 	  <div class="button filter-toggle-button">
 	    <span class="button-text filter-toggle">Filter anzeigen</span>
 	  </div>
-
-	  <div id="fahrzeugsuche"<?php #if( $this->getValue("article_id") != 1 ){ echo ' class="small-search"'; } ?>>
+	  //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
+	  <div id="fahrzeugsuche"<?php #if( $_REQUEST["article_id"]  != 1 ){ echo ' class="small-search"'; } ?>> 
 	    <div class="col-md-12 fs-inner">
 	      <span id="filter-reset" class="reset" style="display:none;">Filter zurücksetzten</span>
-	      <form id="fs-form" action="<?php #echo ($this->getValue("article_id") != 1 ? strtok($_SERVER['REQUEST_URI'], '?') : "/fahrzeugverwaltung-uebersicht.html") ?>" method="POST" class="fs-form"> 
+	      <form id="fs-form" action="<?php #echo ($_REQUEST["article_id"]  != 1 ? strtok($_SERVER['REQUEST_URI'], '?') : "/fahrzeugverwaltung-uebersicht.html") ?>" method="POST" class="fs-form"> //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
 	        <div class="fs-start">
 	          <fieldset> 
 	            <label for="check1">
-	              <?php #$checked1 = ((array_key_exists("neuwagen", $_POST) && $_POST["neuwagen"]) || (array_key_exists("neufahrzeug", $_GET) && $_GET["neufahrzeug"] == 1) || ($this->getValue("article_id") == 11 && (!array_key_exists("changed", $_POST) || !$_POST["changed"]) && (!array_key_exists("neufahrzeug", $_GET) || !$_GET["neufahrzeug"])) ? "checked=''" : ""); ?>
+	              <?php #$checked1 = ((array_key_exists("neuwagen", $_POST) && $_POST["neuwagen"]) || (array_key_exists("neufahrzeug", $_GET) && $_GET["neufahrzeug"] == 1) || ($_REQUEST["article_id"] == 11 && (!array_key_exists("changed", $_POST) || !$_POST["changed"]) && (!array_key_exists("neufahrzeug", $_GET) || !$_GET["neufahrzeug"])) ? "checked=''" : ""); ?> //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
 	              <input type="checkbox" name="neuwagen" value="1" id="check1" <?php #echo $checked1 ?> >
 	              Neuwagen/Tageszulassung
 	            </label> 
 	            <label for="check2">
-	              <?php #$checked2 = ((array_key_exists("gebrauchtwagen", $_POST) && $_POST["gebrauchtwagen"]) || (array_key_exists("neufahrzeug", $_GET) && $_GET["neufahrzeug"] == "3") || ($this->getValue("article_id") == 19 && (!array_key_exists("changed", $_POST) || !$_POST["changed"]) && (!array_key_exists("neufahrzeug", $_GET) || !$_GET["neufahrzeug"])) ? "checked=''" : ""); ?>
+	              <?php #$checked2 = ((array_key_exists("gebrauchtwagen", $_POST) && $_POST["gebrauchtwagen"]) || (array_key_exists("neufahrzeug", $_GET) && $_GET["neufahrzeug"] == "3") || ($_REQUEST["article_id"] == 19 && (!array_key_exists("changed", $_POST) || !$_POST["changed"]) && (!array_key_exists("neufahrzeug", $_GET) || !$_GET["neufahrzeug"])) ? "checked=''" : ""); ?>
+	              //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
 	               <input type="checkbox" name="gebrauchtwagen" value="1" id="check2" <?php #echo $checked2 ?> >
 	               Gebrauchtwagen
 	            </label> 
@@ -401,8 +403,8 @@ function fahrzeugsuche()
 	        </div>
  
 
-	        
-	        <div class="fs-end <?php #echo ($this->getValue("article_id") == 19 || $this->getValue("article_id") == 11 ? "double-search" : "") ?>">
+	        //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
+	        <div class="fs-end <?php #echo ($_REQUEST["article_id"] == 19 || $_REQUEST["article_id"] == 11 ? "double-search" : "") ?>">
 	          <input id="fsearch-submit" rel="nofollow" class="button fsearch" type="submit" value="Suchen" />
 	          <input id="fsearch-where" type="hidden" value="sent" name="action">
 	          <input id="fsearch-changed" type="hidden" value="<?php echo (isset($changed) ? $changed : ''); ?>" name="changed">
@@ -411,8 +413,8 @@ function fahrzeugsuche()
 	    </div>
 	  </div>
 	  <?php 
-/*
-	  if( $this->getValue("article_id") != 1 ){ ?>
+/*	//#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
+	  if( $_REQUEST["article_id"] != 1 ){ ?>
 	    <div class="fs-resell-btn">
 	      <a target="_blank" href="<?php echo rex_getUrl(211, $REX['CUR_CLANG']); ?>" class="fs-resell-btn-text button">Wir kaufen Ihr Auto<span class="icon arrow"></span></a>
 	    </div>
@@ -422,8 +424,8 @@ function fahrzeugsuche()
 	  <script type="text/javascript">changedItems = {};</script>
 
 	  <?php
-	  // Ausgabe Übersicht
-	  if((array_key_exists("action", $_POST) && $_POST["action"]) || (array_key_exists("action", $_GET) && $_GET["action"]) || (array_key_exists("changed", $_POST) && $_POST["changed"]) || (!$_POST && (!array_key_exists("car_id", $_GET) || !$_GET["car_id"]) && $this->getValue("article_id") != 1) || (array_key_exists("fulltextIdentifier", $_POST) && $_POST["fulltextIdentifier"])){
+	  // Ausgabe Übersicht  //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
+	  if((array_key_exists("action", $_POST) && $_POST["action"]) || (array_key_exists("action", $_GET) && $_GET["action"]) || (array_key_exists("changed", $_POST) && $_POST["changed"]) || (!$_POST && (!array_key_exists("car_id", $_GET) || !$_GET["car_id"]) && $_REQUEST["article_id"]  != 1) || (array_key_exists("fulltextIdentifier", $_POST) && $_POST["fulltextIdentifier"])){
 	    if((!array_key_exists("fulltextIdentifier", $_POST) || !$_POST["fulltextIdentifier"])){ 
 	      if(array_key_exists("action", $_GET) && $_GET["action"]){
 	        if(array_key_exists("marke", $_REQUEST) && mysql_escape_string($_REQUEST["marke"]))
@@ -432,9 +434,9 @@ function fahrzeugsuche()
 	          $partsChanged["modell"] = (mysql_escape_string($_REQUEST["modell"]) ? mysql_escape_string($_REQUEST["modell"]) : "");
 	        if((array_key_exists("neuwagen", $_REQUEST) && $_REQUEST["neuwagen"] == 1) && (array_key_exists("gebrauchtwagen", $_REQUEST) && $_REQUEST["gebrauchtwagen"] == 1)){
 	          $partsChanged["neufahrzeug"] = "2";
-	        }elseif((array_key_exists("neuwagen", $_REQUEST) && $_REQUEST["neuwagen"] == 1) || (array_key_exists("neufahrzeug", $_REQUEST) && mysql_escape_string($_REQUEST["neufahrzeug"]) == "1") || $this->getValue("article_id") == 11){
+	        }elseif((array_key_exists("neuwagen", $_REQUEST) && $_REQUEST["neuwagen"] == 1) || (array_key_exists("neufahrzeug", $_REQUEST) && mysql_escape_string($_REQUEST["neufahrzeug"]) == "1") || $_REQUEST["article_id"] == 11){
 	          $partsChanged["neufahrzeug"] = "1";
-	        }elseif((array_key_exists("gebrauchtwagen", $_REQUEST) && $_REQUEST["gebrauchtwagen"] == 1) || (array_key_exists("neufahrzeug", $_REQUEST) && mysql_escape_string($_REQUEST["neufahrzeug"]) == "3") || $this->getValue("article_id") == 19){
+	        }elseif((array_key_exists("gebrauchtwagen", $_REQUEST) && $_REQUEST["gebrauchtwagen"] == 1) || (array_key_exists("neufahrzeug", $_REQUEST) && mysql_escape_string($_REQUEST["neufahrzeug"]) == "3") || $_REQUEST["article_id"] == 19){
 	          $partsChanged["neufahrzeug"] = "3";
 	        }else{
 	          $partsChanged["neufahrzeug"] = "2";
@@ -464,16 +466,16 @@ function fahrzeugsuche()
 	              $changed .= $partName."_".$partValue.",";
 	            }
 	          }
-	        }
-	      }elseif($this->getValue("article_id") == 11 || $this->getValue("article_id") == 19){
-	        if($this->getValue("article_id") == 11)
+	        }  //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
+	      }elseif($_REQUEST["article_id"] == 11 || $_REQUEST["article_id"] == 19){
+	        if($_REQUEST["article_id"] == 11)
 	          $neufahrzeug = 1;
 	        else
 	          $neufahrzeug = 3;
 	        $changed = "neufahrzeug_".$neufahrzeug.",".$_POST["changed"];
 	        $whereRaw = getWhereRaw($changed);
 	        $where = getWhere($whereRaw, "");
-	      }elseif ($this->getValue("article_id") == 27) {
+	      }elseif ($_REQUEST["article_id"] == 27) {
 	        $changed = "prekategorie_('Transporter'),".$_POST["changed"];
 	        $whereRaw = getWhereRaw($changed);
 	        $where = getWhere($whereRaw, "");
@@ -489,11 +491,11 @@ function fahrzeugsuche()
 	    </script>
 	    <?php
 	      }
-	    }else{
-	      if($this->getValue("article_id") == 11 || $this->getValue("article_id") == 19){
-	        if($this->getValue("article_id") == 11){
+	    }else{//#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
+	      if($_REQUEST["article_id"] == 11 || $_REQUEST["article_id"] == 19){
+	        if($_REQUEST["article_id"] == 11){
 	          $pageneufahrzeug = 1;
-	        }elseif($this->getValue("article_id") == 19){
+	        }elseif($_REQUEST["article_id"] == 19){
 	          $pageneufahrzeug = 3;
 	        }
 	        $where = getFullTextWhereParameter($_POST["fulltext"], $pageneufahrzeug);
@@ -621,12 +623,12 @@ function fahrzeugsuche()
 	      if((array_key_exists("gebrauchtwagen", $_POST) && $_POST["gebrauchtwagen"]) && (array_key_exists("neuwagen", $_POST) && $_POST["neuwagen"])){
 	        echo "neuwagen = 1;";
 	        echo "gebrauchtwagen = 1;";
-	        echo "neufahrzeug = 2;";
-	      }elseif((array_key_exists("gebrauchtwagen", $_POST) && $_POST["gebrauchtwagen"]) || ($this->getValue("article_id") == 19 && (!array_key_exists("changed", $_POST) || !$_POST["changed"]) && (!array_key_exists("action", $_GET) || !$_GET["action"])) || (array_key_exists("neufahrzeug", $_REQUEST) && $_REQUEST["neufahrzeug"] == "3")){
+	        echo "neufahrzeug = 2;"; //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
+	      }elseif((array_key_exists("gebrauchtwagen", $_POST) && $_POST["gebrauchtwagen"]) || ($_REQUEST["article_id"] == 19 && (!array_key_exists("changed", $_POST) || !$_POST["changed"]) && (!array_key_exists("action", $_GET) || !$_GET["action"])) || (array_key_exists("neufahrzeug", $_REQUEST) && $_REQUEST["neufahrzeug"] == "3")){
 	        echo "neufahrzeug = 3;";
 	        echo "neuwagen = 0;";
-	        echo "gebrauchtwagen = 1;";
-	      }elseif((array_key_exists("neuwagen", $_POST) && $_POST["neuwagen"]) || ($this->getValue("article_id") == 11 && (!array_key_exists("changed", $_POST) || !$_POST["changed"]) && (!array_key_exists("action", $_GET) || !$_GET["action"])) || (array_key_exists("neufahrzeug", $_REQUEST) && $_REQUEST["neufahrzeug"] == "1")){
+	        echo "gebrauchtwagen = 1;"; //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
+	      }elseif((array_key_exists("neuwagen", $_POST) && $_POST["neuwagen"]) || ($_REQUEST["article_id"] == 11 && (!array_key_exists("changed", $_POST) || !$_POST["changed"]) && (!array_key_exists("action", $_GET) || !$_GET["action"])) || (array_key_exists("neufahrzeug", $_REQUEST) && $_REQUEST["neufahrzeug"] == "1")){
 	        echo "neufahrzeug = 1;";
 	        echo "neuwagen = 1;";
 	        echo "gebrauchtwagen = 0;";
@@ -635,9 +637,9 @@ function fahrzeugsuche()
 	        echo "neuwagen = 0;";
 	        echo "gebrauchtwagen = 0;";
 	      }
-	      if($this->getValue("article_id") == 11){
+	      if($_REQUEST["article_id"] == 11){ //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
 	        $neufahrzeug = 1;
-	      }elseif($this->getValue("article_id") == 19){
+	      }elseif($_REQUEST["article_id"] == 19){
 	        $neufahrzeug = 0;
 	      }else{
 	        $neufahrzeug = false;
@@ -645,8 +647,8 @@ function fahrzeugsuche()
 	    ?>
 	    changed = "<?php echo (isset($changed) ? $changed : ''); ?>";
 	    checkInForm(changed, totalOffers, neufahrzeug, neuwagen, gebrauchtwagen);
-	  </script>
-	  <?php if($this->getValue("article_id") != 1){ ?>
+	  </script> //#pm $this->getValue("article_id") -> $_REQUEST["article_id"] 
+	  <?php if($_REQUEST["article_id"]  != 1){ ?>
 	    <script type="text/javascript">
 	      jQuery(".filter-toggle").on('click', function(event) {
 	        jQuery("#fahrzeugsuche").slideToggle("slow");
@@ -669,18 +671,21 @@ function fahrzeugangebote()
 /*	
 	require_once(__dir__."/fahrzeugsuche/fs-functions.php"); 
 	$i = 0;
-	if($this->getValue("article_id") == 1){                     
+	if($_REQUEST["article_id"] == 1){   //#pm $this->getValue("article_id") -> $_REQUEST["article_id"]                    
 	    $totalCount = getTotalCount();
 	    $randomSelectedOffers = range(1, $totalCount);
 	    shuffle($randomSelectedOffers);
 	    array_splice($randomSelectedOffers, 200, $totalCount);
 	}else{
 	    $randomSelectedOffers = array();
-	    $art = OOArticle::getArticleById("REX_ARTICLE_ID");
-	    $parent = $art->getParent();
-	    $modell = $art->getName();
-	    $marke = str_replace(array("Fiat Professional"), array("Fiat"), $parent->getName());
-	    //$sql = rex_sql::factory(); //ersetzt durch $wpdb
+	    $art = OOArticle::getArticleById("REX_ARTICLE_ID"); 
+	    //$art = $_REQUEST["article_id"];
+	    $parent = $art->getParent(); 
+	    // ??
+	    $modell = $art->getName(); 
+	    // $modell = $_REQUEST["modell"];
+	    $marke = str_replace(array("Fiat Professional"), array("Fiat"), $parent->getName()); 
+	    //$marke = str_replace(array("Fiat Professional"), array("Fiat"), $_REQUEST["marke"]);
 	    $query = "SELECT 
 	                `satz_nummer`
 	            FROM `new_mobile_de`
@@ -689,10 +694,6 @@ function fahrzeugangebote()
 	            ORDER BY RAND() 
 	            LIMIT 10";
 	  	$results = mysqli_query($wpdb, $query); //$sql->setQuery($query);
-	    *//*for($b=0; $b<$sql->getRows(); $b++){
-	        array_push($randomSelectedOffers, $sql->getValue("satz_nummer"));
-	        $sql->next();
-	    }*//*
 	  	while($rows = mysqli_fetch_array($results, MYSQLI_NUM)){
 	  		$randomSelectedOffers[] = $rows;
 	  	}
@@ -705,19 +706,21 @@ function fahrzeugangebote()
 	    <div id="adt">
 	        <div id="oc-clients-full" class="owl-carousel">
 	        <?php
-	            $angebotData = rex_sql::factory();
+	            $angebotData = rex_sql::factory(); 
+	            //$angebotData = $wpdb; //oben definiert
 	            $verwaltungUrl = OOArticle::getArticleById(234)->getUrl();
 	            /**
 	            *  Angepasster Select nach günstigstem preis pro Modell
 	            */
 /*
 	            if(strstr($_SERVER["REQUEST_URI"], '/neuwagen') == true){
-	               $angebotData->setQuery("SELECT * 
+	                $angebotData->setQuery("SELECT * 
 	                        FROM `new_mobile_de`
 	                        WHERE `satz_nummer` IN (".implode(',', $randomSelectedOffers).")
 	                        LIMIT 10");
+	                //$query = "SELECT * FROM `new_mobile_de` WHERE `satz_nummer` IN (".implode(',', $randomSelectedOffers).") LIMIT 10";
 	            }else{
-	         $angebotData->setQuery("SELECT * 
+	         		$angebotData->setQuery("SELECT * 
 	                                 FROM new_mobile_de ct 
 	                                    JOIN (
 	                                            SELECT satz_nummer, kategorie, marke, MIN(preis) as preis
@@ -727,15 +730,24 @@ function fahrzeugangebote()
 	                                    ON ct.kategorie = ctp.kategorie AND ct.marke = ctp.marke AND ct.preis = ctp.preis
 	                                 ORDER BY RAND()
 	                                    LIMIT 10");
-
+					*//*$query = "SELECT * 
+	                                 FROM new_mobile_de ct 
+	                                    JOIN (
+	                                            SELECT satz_nummer, kategorie, marke, MIN(preis) as preis
+	                                            FROM new_mobile_de
+	                                            GROUP BY marke, kategorie
+	                                        ) ctp
+	                                    ON ct.kategorie = ctp.kategorie AND ct.marke = ctp.marke AND ct.preis = ctp.preis
+	                                 ORDER BY RAND()
+	                                    LIMIT 10";*//*
 	            }
 	            
 	               #Ursprünglicher Select:
-	            
-	            for($angebotCounter=0; $angebotCounter<$angebotData->getRows(); $angebotCounter++){
+	            					//#pm forschleife umgeschrieben, steht untendrunter
+	            for($angebotCounter=0; $angebotCounter<$angebotData->getRows(); $angebotCounter++){   
 	                # Laden der Artikeldaten 
 	                
-	                $label = $angebotData->getValue("marke");
+	                $label = $angebotData->getValue("marke"); 
 	                $label = $label[0].strtolower(substr($label, 1));
 	                $image = "/files/newcars/".$angebotData->getValue("interne_nummer")."_01.jpg";
 
@@ -744,7 +756,20 @@ function fahrzeugangebote()
 	                // if(filesize("/home/www/p429803/html".$image) == 39031 || filesize("/home/www/p429803/html".$image) == 160413 || filesize("/home/www/p429803/html".$image) == 132457 || filesize("/home/www/p429803/html".$image) == 39381 || filesize("/home/www/p429803/html".$image) == 136087 || filesize("/home/www/p429803/html".$image) == 133106 || filesize("/home/www/p429803/html".$image) == 38844 || filesize("/home/www/p429803/html".$image) == 160413 || filesize("/home/www/p429803/html".$image) == 132219 || filesize("/home/www/p429803/html".$image) == 132983 || filesize("/home/www/p429803/html".$image) == 39382 || filesize("/home/www/p429803/html".$image) == 136087 || filesize("/home/www/p429803/html".$image) == 39013){
 	                //  continue;
 	                
-	                // }
+	                // } *//* 						//#pm forschleife umgeschrieben:  
+					$results = mysqli_query($wpdb, $query);
+					while($rows = mysqli_fetch_array($results, MYSQLI_NUM)){
+	                $label = $_REQUEST["marke"];
+	                $label = $label[0].strtolower(substr($label, 1));
+	                $image = "/files/newcars/".$_REQUEST["interne_nummer"]."_01.jpg";
+	                // #Filter Image by Size(Only Show Car Pictures in Slider)
+	                // if(filesize("/home/www/p429803/html".$image) == 39031 || filesize("/home/www/p429803/html".$image) == 160413 || filesize("/home/www/p429803/html".$image) == 132457 || filesize("/home/www/p429803/html".$image) == 39381 || filesize("/home/www/p429803/html".$image) == 136087 || filesize("/home/www/p429803/html".$image) == 133106 || filesize("/home/www/p429803/html".$image) == 38844 || filesize("/home/www/p429803/html".$image) == 160413 || filesize("/home/www/p429803/html".$image) == 132219 || filesize("/home/www/p429803/html".$image) == 132983 || filesize("/home/www/p429803/html".$image) == 39382 || filesize("/home/www/p429803/html".$image) == 136087 || filesize("/home/www/p429803/html".$image) == 39013){
+	                //  continue;
+                    }	
+					*//*
+					
+
+
 
 
 	                // if($_SERVER["REMOTE_ADDR"] == "217.86.140.30") {
@@ -760,7 +785,7 @@ function fahrzeugangebote()
 	                    $image = "index.php?rex_img_type=weller_home_offers&rex_img_file=" . str_replace("/files/", "", $image);                    
 	                #}
 
-	                $modell = $angebotData->getValue("modell");
+	                $modell = $_REQUEST["modell"];  //#pm $modell = $angebotData->getValue("modell"); -> $modell = $_REQUEST["modell"];
 	                $shortmodell = explode(" ", $modell);
 	                $shortmodell = $shortmodell[0];
 	                $shortmodellStrL = strlen($shortmodell);
@@ -783,27 +808,35 @@ function fahrzeugangebote()
 	                    case 'Ford':
 	                        $AngebotIcon = '<img class="angebot-'.$label.'-icon" src="img/ford.svg" alt="'.$label.'">';
 	                        break;
-	                }
-	                if ($angebotData->getValue("neufahrzeug") == 1) {
+	                } //#pm die unten stehenden 20zeilen ausgetauscht $angebotData->getValue("KEY") -> $_REQUEST["KEY"];
+	                if ($_REQUEST["neufahrzeug"] == 1) { // if ($_REQUEST["neufahrzeug"] == 1)
 	                    $isUsed = "Neuwagen";
-	                }elseif ($angebotData->getValue("tageszulassung") == 1) {
+	                }elseif ($_REQUEST["tageszulassung"] == 1) { // elseif ($_REQUEST["tageszulassung"] == 1)
 	                    $isUsed = "Tageszulassung";
-	                }elseif ($angebotData->getValue("vorfuehrfahrzeug") == 1) {
+	                }elseif ($_REQUEST["vorfuehrfahrzeug"] == 1) { // elseif ($_REQUEST["vorfuehrfahrzeug"] == 1)
 	                    $isUsed = "Vorführfahrzeug";
 	                }else{
 	                    $isUsed = "Gebrauchtwagen";
 	                }
-	                $ez = $angebotData->getValue("ez");
+	                $ez = $_REQUEST["ez"]; //#pm $ez = $angebotData->getValue("ez"); -> $ez = $_REQUEST["ez"];
 	                $ez = explode(".", $ez);
 	                $months = array("0", "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
 	                $textMonth = $months[((int)$ez[0])];
 	                $ez = $textMonth.' '.$ez[1];
-	                if($angebotData->getValue('mwstsatz') == '19')
-	                    $price = round((1.19 * str_replace(",", ".", $angebotData->getValue('preis'))), 0);
-	                else $price = round(str_replace(",", ".", $angebotData->getValue('preis')), 0);
+					
+					//#pm die unteren 5 zeilen: $angebotData->getValue('KEY') -> $_REQUEST["KEY"];
+	                if($_REQUEST["mwstsatz"] == '19'){ // if($_REQUEST["mwstsatz"] == '19')
+	                    $price = round((1.19 * str_replace(",", ".", $_REQUEST["preis"])), 0); 
+	                }else{ 
+	                	$price = round(str_replace(",", ".", $_REQUEST["preis"]), 0);
+	                }
+
+
 	                $price = number_format($price, 2, ",", ".");
 	                $carPriceSplit = explode(",", $price);
 	                $carPriceDecimals = $carPriceSplit[1];
+
+
 	                if($carPriceDecimals == "00"){
 	                    $carPriceDecimals = ",-";
 	                    $carPrice = $carPriceSplit[0].$carPriceDecimals;
@@ -816,13 +849,15 @@ function fahrzeugangebote()
 
 	                <div class="angebot-box">
 	                    <span class="angebot-pfeilpreis"><?php echo $carPrice.' €'; ?></span>
-	                    <a href="<?php echo $verwaltungUrl.'?action=prefill'.'&marke='.$label.'&modell='.$shortmodell.'%&neufahrzeug='.str_replace(0, 3, $angebotData->getValue("neufahrzeug")).'&car_id='.$angebotData->getValue("satz_nummer"); ?>">
+	                    <a href="<?php echo $verwaltungUrl.'?action=prefill'.'&marke='.$label.'&modell='.$shortmodell.'%&neufahrzeug='.str_replace(0, 3, $_REQUEST["neufahrzeug"]).'&car_id='.$_REQUEST["satz_nummer"]; ?>"> 
+	                    //#pm $angebotData->getValue("neufahrzeug") -> $_REQUEST["neufahrzeug"]  && $angebotData->getValue("satz_nummer") -> $_REQUEST["satz_nummer"]
 	                        <img alt="<?php echo $fullname; ?>" src="<?php echo $image; ?>" data-original="<?php echo $image; ?>">
 	                    </a>
 	                    <div class="angebot-info">
 	                        <div class="angebot-namebox">              
 	                            <?php echo $AngebotIcon; ?>
-	                            <a href="<?php echo $verwaltungUrl.'?action=prefill'.'&marke='.$label.'&modell='.$shortmodell.'%&neufahrzeug='.str_replace(0, 3, $angebotData->getValue("neufahrzeug")).'&car_id='.$angebotData->getValue("satz_nummer"); ?>" class="angebot-button">
+	                            <a href="<?php echo $verwaltungUrl.'?action=prefill'.'&marke='.$label.'&modell='.$shortmodell.'%&neufahrzeug='.str_replace(0, 3, $_REQUEST["neufahrzeug"]).'&car_id='.$_REQUEST["satz_nummer"]; ?>" class="angebot-button">
+	                            //#pm $angebotData->getValue("neufahrzeug") -> $_REQUEST["neufahrzeug"] && $angebotData->getValue("satz_nummer") -> $_REQUEST["satz_nummer"]
 	                            <span class='angebot-name'><?php echo $label." ".$modell; ?></span>  
 	                            </a>          
 	                        </div>
@@ -833,7 +868,8 @@ function fahrzeugangebote()
 	                            </div>
 	                            <div class="beschreibung-item">
 	                                <i class="angebot-street-icon"></i>
-	                                <span class="beschreibung-text"><?php echo ($isUsed == "Neuwagen" ? "0" :number_format($angebotData->getValue("kilometer"), 0, "", "."))." km" ; ?></span>
+	                                <span class="beschreibung-text"><?php echo ($isUsed == "Neuwagen" ? "0" :number_format($_REQUEST["kilometer"], 0, "", "."))." km" ; ?></span>
+	                                //#pm $angebotData->getValue("kilometer") -> $_REQUEST["kilometer"]
 	                            </div>
 	                            <?php if(!$isUsed){ ?>
 	                                <div class="beschreibung-item">
@@ -843,19 +879,23 @@ function fahrzeugangebote()
 	                            <?php } ?>
 	                            <div class="beschreibung-item">
 	                                <i class="angebot-speedometer-icon"></i>
-	                                <span class="beschreibung-text"><?php echo $angebotData->getValue("leistung")." kW (".round(($angebotData->getValue("leistung")*1.35962))." PS)"; ?></span>
+	                                <span class="beschreibung-text"><?php echo $_REQUEST["leistung"]." kW (".round(($_REQUEST["leistung"]*1.35962))." PS)"; ?></span>
+	                                //#pm $angebotData->getValue("leistung") -> $_REQUEST["leistung"]
 	                            </div>
 	                            <div class="beschreibung-item">
 	                                <i class="angebot-fuel-icon"></i>
-	                                <span class="beschreibung-text"><?php echo getKraftstoffArt($angebotData->getValue("kraftstoffart")); ?></span>
+	                                <span class="beschreibung-text"><?php echo getKraftstoffArt($_REQUEST["kraftstoffart"]); ?></span>
+	                                //#pm $angebotData->getValue("kraftstoffart") -> $_REQUEST["kraftstoffart"]
 	                            </div>
 	                            <div class="beschreibung-item">
 	                                <i class="angebot-engine-icon"></i>
-	                                <span class="beschreibung-text"><?php echo getGetriebeArt($angebotData->getValue("getriebeart")); ?></span>
+	                                <span class="beschreibung-text"><?php echo getGetriebeArt($_REQUEST["getriebeart"]); ?></span>
+	                                //#pm $angebotData->getValue("getriebeart") -> $_REQUEST["getriebeart"]
 	                            </div>
 	                            <div class="beschreibung-item">
 	                                <i class="angebot-calendar-icon"></i>
-	                                <span class="beschreibung-text"><?php echo $angebotData->getValue("ez") ?></span>
+	                                <span class="beschreibung-text"><?php echo $_REQUEST["ez"]; ?></span>
+	                                //#pm $angebotData->getValue("ez") -> $_REQUEST["ez"]
 	                            </div>
 	                        </div>
 	                        <div class="angebot-enkv">
@@ -863,17 +903,22 @@ function fahrzeugangebote()
 	                                <?php 
 	                                    echo "<div class='enkv-box'>";
 	                                        echo "<span class='offer-envkv-label'>Kraftstoffverbr. <span>(komb./innerorts/außerorts)</span>:</span><br />";
-	                                        echo "<span class='offer-envkv-value'> ".$angebotData->getValue("verbrauch_kombiniert")." l/100km / ".$angebotData->getValue("verbrauch_innerorts")." l/100km / ".$angebotData->getValue("verbrauch_ausserorts")." l/100km</span>";
+	                                        echo "<span class='offer-envkv-value'> ".$_REQUEST["verbrauch_kombiniert"]." l/100km / ".$_REQUEST["verbrauch_innerorts"]." l/100km / ".$_REQUEST["verbrauch_ausserorts"]." l/100km</span>";
 	                                    echo "</div>";
+	                                    //#pm $angebotData->getValue("verbrauch_kombiniert") -> $_REQUEST["verbrauch_kombiniert"]
+	                                    //#pm $angebotData->getValue("verbrauch_innerorts") -> $_REQUEST["verbrauch_innerorts"]
+	                                    //#pm $angebotData->getValue("verbrauch_ausserorts") -> $_REQUEST["verbrauch_ausserorts"]
 	                                    echo "<div class='enkv-box'>";
 	                                        echo "<span class='offer-envkv-label'>CO2-Emissionen kombiniert: </span>";
-	                                        echo "<span class='offer-envkv-value'>".$angebotData->getValue("emission")." g/km</span>";
+	                                        echo "<span class='offer-envkv-value'>"._REQUEST["emission"]." g/km</span>";
 	                                    echo "</div>";
+	                                    //#pm $angebotData->getValue("emission") -> $_REQUEST["emission"]
 	                                ?>
 	                            </div>
 	                        </div>
 	                        <div class="angebot-buttonbox">
-	                            <a href="<?php echo $verwaltungUrl.'?action=prefill'.'&marke='.$label.'&modell='.$shortmodell.'%&neufahrzeug='.str_replace(0, 3, $angebotData->getValue("neufahrzeug")).'&car_id='.$angebotData->getValue("satz_nummer"); ?>" class="angebot-button">Zum Angebot<span class="icon arrow"></span></a>
+	                            <a href="<?php echo $verwaltungUrl.'?action=prefill'.'&marke='.$label.'&modell='.$shortmodell.'%&neufahrzeug='.str_replace(0, 3, $_REQUEST["neufahrzeug"]).'&car_id='.$_REQUEST["satz_nummer"]; ?>" class="angebot-button">Zum Angebot<span class="icon arrow"></span></a>
+	                            //#pm $angebotData->getValue("neufahrzeug") -> $_REQUEST["neufahrzeug"] && $angebotData->getValue("satz_nummer") -> $_REQUEST["satz_nummer"]
 	                        </div>
 	                    </div>
 	                </div>

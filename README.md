@@ -1,6 +1,38 @@
 # weller
 
 
+
+NEUE ÄNDERUNGEN:
+Einfach im Texteditor nach "//#pm" suchen. Dort habe ich alle Änderungen im Dokument markiert und hingeschrieben was ich geändert habe.
+Hier aber nochmal die Änderungen zusammengefasst:
+
+Auf diversen Zeilen:
+$this->getValue("article_id") -> $_REQUEST["article_id"]
+
+Zeile: 745 bis 770
+forschleife umgeschrieben für wordpress db
+
+
+Z. 788:
+$modell = $angebotData->getValue("modell"); -> $modell = $_REQUEST["modell"];
+
+
+Z.811-833
+$angebotData->getValue("KEY") -> $_REQUEST["KEY"];
+bsp: $ez = $angebotData->getValue("ez"); -> $ez = $_REQUEST["ez"];
+
+Z.853ff
+$angebotData->getValue("neufahrzeug") -> $_REQUEST["neufahrzeug"] 
+$angebotData->getValue("satz_nummer") -> $_REQUEST["satz_nummer"]
+
+
+
+- - - - - -- - - - -- - -- - - -- - -- - - -- - -- - - ---- - -- - - -- - -- - - -- - -- 
+- - - - - -- - - - -- - -- - - -- - -- - - -- - -- - - ---- - -- - - -- - -- - - -- - -- 
+- - - - - -- - - - -- - -- - - -- - -- - - -- - -- - - ---- - -- - - -- - -- - - -- - -- 
+
+ALTE ÄNDERUNGEN(nicht beachten):
+
 Änderungen in der function.php:
 __________________________________________________________________________________________
 
