@@ -80,7 +80,7 @@ function fahrzeugsuche()
   if(array_key_exists("standort", $_REQUEST) && mysql_escape_string($_REQUEST["standort"]))
     $partsChanged["standort"] = mysql_escape_string($_REQUEST["standort"]);
 */
-#  $backUrl = OOArticle::getArticleById(REX_ARTICLE_ID)->getUrl()."?action=prefill";
+#  $backUrl = OOArticle::getArticleById(REX_ARTICLE_ID)->getUrl()."?action=prefill"; //#pm ??
    $backUrl = $_SERVER['REQUEST_URI']."?action=prefill";
 
   if(isset($partsChanged) && is_array($partsChanged)){
@@ -678,14 +678,11 @@ function fahrzeugangebote()
 	    array_splice($randomSelectedOffers, 200, $totalCount);
 	}else{
 	    $randomSelectedOffers = array();
-	    $art = OOArticle::getArticleById("REX_ARTICLE_ID"); 
-	    //$art = $_REQUEST["article_id"];
-	    $parent = $art->getParent(); 
-	    // ??
-	    $modell = $art->getName(); 
-	    // $modell = $_REQUEST["modell"];
-	    $marke = str_replace(array("Fiat Professional"), array("Fiat"), $parent->getName()); 
-	    //$marke = str_replace(array("Fiat Professional"), array("Fiat"), $_REQUEST["marke"]);
+	    $art = $_REQUEST["article_id"]; //#pm $art = $_REQUEST["article_id"]; -> $art = OOArticle::getArticleById("REX_ARTICLE_ID");
+	    $parent = $art->getParent(); //#pm ??
+	    $modell = $_REQUEST["modell"]; //#pm $modell = $art->getName(); -> $modell = $_REQUEST["modell"];
+	    $marke = str_replace(array("Fiat Professional"), array("Fiat"), $parent->getName()); //+pm ??
+	    
 	    $query = "SELECT 
 	                `satz_nummer`
 	            FROM `new_mobile_de`
@@ -706,9 +703,9 @@ function fahrzeugangebote()
 	    <div id="adt">
 	        <div id="oc-clients-full" class="owl-carousel">
 	        <?php
-	            $angebotData = rex_sql::factory(); 
-	            //$angebotData = $wpdb; //oben definiert
-	            $verwaltungUrl = OOArticle::getArticleById(234)->getUrl();
+	            $angebotData = rex_sql::factory(); //#pm muss noch weg
+	            //$angebotData = $wpdb; //#pm redaxo db zu wpdb, muss noch auskommentiert werden 
+	            $verwaltungUrl = OOArticle::getArticleById(234)->getUrl(); //#pm ??
 	            /**
 	            *  Angepasster Select nach günstigstem preis pro Modell
 	            */
@@ -719,7 +716,9 @@ function fahrzeugangebote()
 	                        WHERE `satz_nummer` IN (".implode(',', $randomSelectedOffers).")
 	                        LIMIT 10");
 	                //$query = "SELECT * FROM `new_mobile_de` WHERE `satz_nummer` IN (".implode(',', $randomSelectedOffers).") LIMIT 10";
+	                //#pm neue query, austauschen ??
 	            }else{
+	            	//#pm alte query var, löschen??
 	         		$angebotData->setQuery("SELECT * 
 	                                 FROM new_mobile_de ct 
 	                                    JOIN (
@@ -730,6 +729,7 @@ function fahrzeugangebote()
 	                                    ON ct.kategorie = ctp.kategorie AND ct.marke = ctp.marke AND ct.preis = ctp.preis
 	                                 ORDER BY RAND()
 	                                    LIMIT 10");
+	                 //#pm neue query var
 					*//*$query = "SELECT * 
 	                                 FROM new_mobile_de ct 
 	                                    JOIN (
